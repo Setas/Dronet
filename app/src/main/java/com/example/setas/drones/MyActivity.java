@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.codeminders.ardrone.ARDrone;
@@ -12,52 +13,14 @@ import com.codeminders.ardrone.ARDrone;
 public class MyActivity extends Activity {
 
     private static final long CONNECT_TIMEOUT = 3000;
+    private ARDrone drone;
+    private TextView statusLabel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
-
-        TextView text = (TextView) findViewById(R.id.text);
-        ARDrone drone;
-        try
-        {
-            // Create ARDrone object,
-            // connect to drone and initialize it.
-            drone = new ARDrone();
-            text.setText("connecting");
-            drone.connect();
-            drone.clearEmergencySignal();
-
-            // Wait until drone is ready
-            drone.waitForReady(CONNECT_TIMEOUT);
-
-            // do TRIM operation
-            drone.trim();
-
-            // Take off
-            text.setText("Taking off");
-            System.err.println("Taking off");
-            drone.takeOff();
-
-            // Fly a little :)
-            Thread.sleep(5000);
-
-            // Land
-            text.setText("Landing");
-            System.err.println("Landing");
-            drone.land();
-
-            // Give it some time to land
-            Thread.sleep(2000);
-
-            // Disconnect from the done
-            drone.disconnect();
-
-        } catch(Throwable e)
-        {
-            e.printStackTrace();
-        }
-
+        statusLabel = (TextView) findViewById(R.id.text);
     }
 
 
@@ -78,5 +41,54 @@ public class MyActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void connectDrone(View view) {
+        try
+        {
+            // Create ARDrone object,
+            // connect to drone and initialize it.
+            drone = new ARDrone();
+            statusLabel.setText("connecting");
+            try {
+                drone.connect();
+            }catch(Exception e){
+                statusLabel.setText("connection failed");
+            }
+            drone.clearEmergencySignal();
+
+            // Wait until drone is ready
+            drone.waitForReady(CONNECT_TIMEOUT);
+
+            // do TRIM operation
+            drone.trim();
+
+            // Take off
+            statusLabel.setText("Taking off");
+            System.err.println("Taking off");
+            drone.takeOff();
+
+            // Fly a little :)
+            Thread.sleep(5000);
+
+            // Land
+            statusLabel.setText("Landing");
+            System.err.println("Landing");
+            drone.land();
+
+            // Give it some time to land
+            Thread.sleep(2000);
+
+            // Disconnect from the done
+            drone.disconnect();
+
+        } catch(Throwable e)
+        {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void btnForwardClicked(View view) {
     }
 }
