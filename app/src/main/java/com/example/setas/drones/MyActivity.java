@@ -6,8 +6,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.codeminders.ardrone.ARDrone;
+
+import tasks.FetchingDataTask;
 
 
 public class MyActivity extends Activity {
@@ -15,12 +18,14 @@ public class MyActivity extends Activity {
     private static final long CONNECT_TIMEOUT = 3000;
     private ARDrone drone;
     private TextView statusLabel;
+    private TextView textPlane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
         statusLabel = (TextView) findViewById(R.id.text);
+        textPlane = (TextView) findViewById(R.id.planeText);
     }
 
 
@@ -44,51 +49,63 @@ public class MyActivity extends Activity {
     }
 
     public void connectDrone(View view) {
-        try
-        {
-            // Create ARDrone object,
-            // connect to drone and initialize it.
-            drone = new ARDrone();
-            statusLabel.setText("connecting");
-            try {
-                drone.connect();
-            }catch(Exception e){
-                statusLabel.setText("connection failed");
-            }
-            drone.clearEmergencySignal();
+        FetchingDataTask task = new FetchingDataTask(this);
+        task.execute("empty");
 
-            // Wait until drone is ready
-            drone.waitForReady(CONNECT_TIMEOUT);
-
-            // do TRIM operation
-            drone.trim();
-
-            // Take off
-            statusLabel.setText("Taking off");
-            System.err.println("Taking off");
-            drone.takeOff();
-
-            // Fly a little :)
-            Thread.sleep(5000);
-
-            // Land
-            statusLabel.setText("Landing");
-            System.err.println("Landing");
-            drone.land();
-
-            // Give it some time to land
-            Thread.sleep(2000);
-
-            // Disconnect from the done
-            drone.disconnect();
-
-        } catch(Throwable e)
-        {
-            e.printStackTrace();
-        }
+//        try
+//        {
+//            // Create ARDrone object,
+//            // connect to drone and initialize it.
+//            drone = new ARDrone();
+//            statusLabel.setText("connecting");
+//            try {
+//                drone.connect();
+//            }catch(Exception e){
+//                statusLabel.setText("connection failed");
+//            }
+//            drone.clearEmergencySignal();
+//
+//            // Wait until drone is ready
+//            drone.waitForReady(CONNECT_TIMEOUT);
+//
+//            // do TRIM operation
+//            drone.trim();
+//
+//            // Take off
+//            statusLabel.setText("Taking off");
+//            System.err.println("Taking off");
+//            drone.takeOff();
+//
+//            // Fly a little :)
+//            Thread.sleep(5000);
+//
+//            // Land
+//            statusLabel.setText("Landing");
+//            System.err.println("Landing");
+//            drone.land();
+//
+//            // Give it some time to land
+//            Thread.sleep(2000);
+//
+//            // Disconnect from the done
+//            drone.disconnect();
+//
+//        } catch(Throwable e)
+//        {
+//            e.printStackTrace();
+//        }
 
     }
 
     public void btnForwardClicked(View view) {
     }
+
+    public void alert(String msg){
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+    }
+
+    public void setData(String str){
+        textPlane.setText(str);
+    }
+
 }
