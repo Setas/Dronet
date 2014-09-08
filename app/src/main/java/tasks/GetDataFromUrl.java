@@ -2,7 +2,6 @@ package tasks;
 
 import android.util.Log;
 
-import com.example.setas.drones.HttpRequest;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;

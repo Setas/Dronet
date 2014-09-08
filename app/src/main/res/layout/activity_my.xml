@@ -39,6 +39,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:maxLines="@android:integer/status_bar_notification_info_maxnum"
+            android:scrollbars="vertical"
             android:id="@+id/planeText"/>
         </LinearLayout>
 
